@@ -21,4 +21,3 @@ oxbow-lambda-shared = { path = "../../crates/oxbow-lambda-shared" }
 aws-sdk-glue = "1.26.0"
 aws-config = { version = "1.2.0", features = ["behavior-version-latest"] }
 lambda_runtime = { version = "0.11" }
-aws-smithy-runtime-api = "1.4.0"
