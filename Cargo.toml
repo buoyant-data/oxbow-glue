@@ -1,0 +1,30 @@
+[workspace]
+members = [
+    "lambdas/*",
+]
+resolver = "3"
+
+[workspace.package]
+version = "1.11.3"
+edition = "2024"
+homepage = "https://github.com/buoyant-data/oxbow-glue"
+repository = "https://github.com/buoyant-data/oxbow-glue"
+
+[workspace.dependencies]
+# The buoyant-oxbow crates remain in the oxbow monorepo; reference them by
+# path from a sibling checkout of https://github.com/buoyant-data/oxbow
+buoyant-oxbow-lambda-shared = { path = "../oxbow/crates/oxbow-lambda-shared" }
+
+anyhow = "1"
+aws-config = "1.12.0"
+aws-sdk-athena = "1.117.0"
+aws-sdk-glue = "1.164.0"
+aws_lambda_events = { version = "0.15", default-features = false, features = ["sns", "sqs", "s3"] }
+deltalake = { git = "https://github.com/delta-io/delta-rs", branch = "main", features = ["s3", "json", "datafusion"] }
+lambda_runtime = "0.11"
+regex = "1"
+serde_json = "1"
+tokio = { version = "1", features = ["macros"] }
+tracing = { version = "0.1", features = ["log"] }
+tracing-subscriber = { version = "0.3", default-features = false, features = ["fmt", "env-filter", "tracing-log"] }
+url = { version = "2.3", features = ["serde"] }

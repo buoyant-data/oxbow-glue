@@ -1,0 +1,66 @@
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+= oxbow-glue
+
+WARNING: *This project is no longer receiving regular updates from https://buoyantdata.com[Buoyant Data].* This repository is provided as-is for archival and reference purposes.
+
+`oxbow-glue` contains the AWS Glue-related Lambda functions that were
+originally developed as part of the
+https://github.com/buoyant-data/oxbow[oxbow] project. The git history of this
+repository was extracted from `oxbow` with `git filter-branch`, preserving
+every commit that touched the Glue lambdas.
+
+== Lambdas
+
+=== glue-create
+
+Located in `lambdas/glue-create/`.
+
+Receives S3 bucket notifications when a new Delta Lake table is created and
+creates the appropriate table entry in the AWS Glue Data Catalog. It handles
+the custom renaming logic needed to accommodate the two-layer hierarchy of the
+Glue Data Catalog (`database` and `table name`).
+
+See link:lambdas/glue-create/README.adoc[glue-create docs] for environment
+variables and further details.
+
+=== glue-sync
+
+Located in `lambdas/glue-sync/`.
+
+Keeps AWS Glue Data Catalog entries in sync with the schemas of Delta Lake
+tables. Triggered by S3 Event Notifications; when a table schema changes it
+loads the Delta table, compares its schema to the Glue Data Catalog entry, and
+modifies the entry where necessary.
+
+See link:lambdas/glue-sync/README.adoc[glue-sync docs] for environment
+variables and further details.
+
+== Repository layout
+
+This repository preserves the original directory layout from the `oxbow`
+monorepo:
+
+* `lambdas/glue-create/` — the `glue-create` Lambda
+* `lambdas/glue-sync/` — the `glue-sync` Lambda
+* `tests/data/` — Delta Lake table fixtures used by the unit tests
+
+== Building and testing
+
+This repository is its own Cargo workspace (`lambdas/*`). The lambdas depend
+on the `buoyant-oxbow-lambda-shared` crate, which remains in the
+https://github.com/buoyant-data/oxbow[oxbow] repository and is referenced by a
+path dependency that expects a sibling checkout of `oxbow`:
+
+[source,bash]
+----
+git clone https://github.com/buoyant-data/oxbow ../oxbow
+cargo build
+cargo nextest run
+----
